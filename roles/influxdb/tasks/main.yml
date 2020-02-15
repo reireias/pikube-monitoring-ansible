@@ -31,6 +31,10 @@
   command: "influx -execute \"create user {{ lookup('env', 'INFLUX_USER') }} with password '{{ lookup('env', 'INFLUX_PASS') }}' with all privileges;\""
   when: influxdb.changed
 
+- name: set retention policy
+  command: "influx -execute \"create retention policy seven_days on prometheus duration 7d replication 1 default;\""
+  when: influxdb.changed
+
 - name: auth enabled
   replace:
     path: /etc/influxdb/influxdb.conf
