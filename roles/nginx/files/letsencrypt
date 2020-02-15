@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+MAILTO=""
+
+* * * * 0 certbot renew

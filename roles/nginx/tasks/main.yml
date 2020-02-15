@@ -1,0 +1,27 @@
+---
+- name: install packages
+  apt:
+    name:
+      - nginx
+      - certbot
+      - python-certbot-nginx
+    state: present
+    force_apt_get: yes
+
+- name: copy nginx conf file
+  template:
+    src: monitoring.conf.template
+    dest: /etc/nginx/conf.d/monitoring.conf
+
+- name: reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+
+- name: set cron for letsencrypt
+  copy:
+    src: letsencrypt
+    dest: /etc/cron.d/letsencrypt
+    owner: root
+    group: root
+    mode: 0644

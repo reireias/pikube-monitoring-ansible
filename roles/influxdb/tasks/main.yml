@@ -1,0 +1,43 @@
+---
+- name: add influxdb gpg key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: add influxdb repository
+  apt_repository:
+    repo: deb https://repos.influxdata.com/debian stretch stable
+    state: present
+
+- name: install influxdb
+  apt:
+    name: influxdb
+    state: present
+    force_apt_get: yes
+  register: influxdb
+
+- name: enabled and start influxdb
+  systemd:
+    name: influxdb
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: create database
+  command: influx -execute "create database prometheus;"
+  when: influxdb.changed
+
+- name: create user
+  command: "influx -execute \"create user {{ lookup('env', 'INFLUX_USER') }} with password '{{ lookup('env', 'INFLUX_PASS') }}' with all privileges;\""
+  when: influxdb.changed
+
+- name: auth enabled
+  replace:
+    path: /etc/influxdb/influxdb.conf
+    regexp: "# auth-enabled = false"
+    replace: "auth-enabled = true"
+
+- name:  restart influxdb
+  systemd:
+    name: influxdb
+    state: restarted

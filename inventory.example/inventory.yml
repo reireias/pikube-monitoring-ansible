@@ -1,0 +1,3 @@
+all:
+  vars:
+    server_name: '<your_domain>'

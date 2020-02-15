@@ -1,0 +1,12 @@
+plugin: gcp_compute
+zones:
+  - <your_zone>
+projects:
+  - <your_project_id>
+scopes:
+  - https://www.googleapis.com/auth/compute
+service_account_file: <your_service_account_file_path>
+auth_kind: serviceaccount
+filters: []
+groups:
+  server: "'<your_gce_instance_name>' in name"
