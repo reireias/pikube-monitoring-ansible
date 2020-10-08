@@ -25,3 +25,12 @@
     owner: root
     group: root
     mode: 0644
+
+- name: copy logrotate conf
+  copy:
+    src: logrotate_nginx
+    dest: /etc/logrotate.d/nginx
+    owner: root
+    group: root
+    mode: 0644
+
